@@ -56,7 +56,7 @@ def get_system_memory():
     return mem_total_mb
 
 
-def simple_app(environ, start_response):
+def application(environ, start_response):
     status = '200 OK'
     headers = [('Content-type', 'application/json')]
     d = dict()
@@ -67,9 +67,10 @@ def simple_app(environ, start_response):
     ret = json.dumps(d)
     return ret
 
-print "Serving on port %s:%s" % (HOST, str(PORT))
-httpd = make_server(HOST, PORT, simple_app)
-try:
-    httpd.serve_forever()
-except KeyboardInterrupt:
-    httpd.shutdown()
+if "__main__" == __name__:
+    print "Serving on port %s:%s" % (HOST, str(PORT))
+    httpd = make_server(HOST, PORT, application)
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        httpd.shutdown()

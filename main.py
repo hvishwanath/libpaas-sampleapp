@@ -17,9 +17,29 @@ def _stop_handler(signum, frame):
 signal.signal(signal.SIGTERM, _stop_handler)
 signal.signal(signal.SIGINT, _sleep_handler)
 
+# Heroku, Openshift env vars for detecting port and ip
+port_env_keys = ['PORT', 'OPENSHIFT_PYTHON_PORT']
+ip_env_keys = ['HOST', 'OPENSHIFT_PYTHON_IP']
 
-PORT = int(os.environ.get('PORT', 9000))
-HOST = os.environ.get('HOST', '0.0.0.0')
+PORT = None
+HOST = None
+
+# Detect port from env. default is 9000
+for k in port_env_keys:
+    if os.environ.has_key(k):
+        PORT = int(os.environ.get(k))
+        break
+if PORT is None:
+    PORT = 9000
+
+# Detect ip from env. default is 0.0.0.0
+for k in ip_env_keys:
+    if os.environ.has_key(k):
+        HOST = int(os.environ.get(k))
+        break
+if HOST is None:
+    HOST = "0.0.0.0"
+
 
 # A relatively simple WSGI application. It's going to print out the
 # environment dictionary after being updated by setup_testing_defaults
@@ -43,7 +63,6 @@ def simple_app(environ, start_response):
     d["sensors"] = {}
     d["sensors"]["shopfloor_temp_1"] = {"status" : "OK", "value": str(random.randrange(20, 30)), "unit" : "degree c"}
     d["sensors"]["exit_valve_pressure_1"] = {"status" : "OK", "value": str(random.randrange(40, 50)), "unit" : "pascals"}
-    d["sensors"]["new_sensor"] = {"status" : "OK", "value": str(random.randrange(40, 50)), "unit" : "pascals"}
     start_response(status, headers)
     ret = json.dumps(d)
     return ret

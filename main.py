@@ -35,7 +35,7 @@ if PORT is None:
 # Detect ip from env. default is 0.0.0.0
 for k in ip_env_keys:
     if os.environ.has_key(k):
-        HOST = int(os.environ.get(k))
+        HOST = os.environ.get(k)
         break
 if HOST is None:
     HOST = "0.0.0.0"

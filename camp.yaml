@@ -1,0 +1,20 @@
+--- 
+camp_version: CAMP 1.1
+name: Simple WSGI Application
+description: Displays sensor values over REST API
+tags: [ Python, WSGI ]
+
+artifacts: 
+  - 
+    artifact_type: org.python:src
+    content: 
+      href: "pdp:!"
+    requirements: 
+      - 
+        requirement_type: com.python:wsgi
+        com.python.wsgi.application: main/application
+        com.python.wsgi.servername: platform
+       
+      - 
+        requirement_type: org.libpaas:env
+        myenv: myvalue
